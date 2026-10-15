@@ -306,7 +306,7 @@ class Handler(BaseHTTPRequestHandler):
             if not all(math.isfinite(x) for x in (lat,lon,accuracy,age)) or not (-90<=lat<=90 and -180<=lon<=180):
                 return json_response(self,400,{"error":"Invalid location values"})
             if accuracy < 0 or accuracy > MAX_ACCURACY_M:
-                return json_response(self,403,{"error":"GPS accuracy must be 2 metres or better. Move to an area with a clearer GPS signal and retry."})
+                return json_response(self,403,{"error":"GPS accuracy must be 10 metres or better. Move to an area with a clearer GPS signal and retry."})
             if age < 0 or age > MAX_AGE_SECONDS:
                 return json_response(self,403,{"error":"Location reading is older than 15 seconds. Retry location capture."})
             with connect() as c:
