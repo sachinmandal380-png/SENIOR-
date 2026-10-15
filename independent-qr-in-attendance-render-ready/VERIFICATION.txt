@@ -1,0 +1,17 @@
+Independent QR IN Attendance System — Render-ready package verification
+
+Verified in this environment:
+- Python syntax compilation: PASS
+- Automated unit tests: 5 PASS
+- SQLite schema initialization: PASS
+- SITE-001 seed creation: PASS
+- Database uniqueness constraint prevents duplicate IN attendance for one person on the same date: PASS
+- Password hashing/verification: PASS
+
+Not verified here:
+- Live PostgreSQL/Neon connection (no database credentials were supplied)
+- Live Render deployment
+- Real-device camera/QR scanning and GPS/geofence behavior
+- Production security review, monitoring and backup restoration
+
+For hosted use, configure DATABASE_URL with PostgreSQL and ADMIN_SETUP_KEY in Render. Do not rely on the free Render web-service filesystem for attendance data. Review the chosen database provider's retention and backup terms before real attendance is recorded.
