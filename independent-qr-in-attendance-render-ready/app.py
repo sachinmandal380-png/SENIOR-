@@ -321,7 +321,7 @@ class Handler(BaseHTTPRequestHandler):
                     c.execute("INSERT INTO security_events(event_type,site_id,details,created_at) VALUES(?,?,?,?)",
                               ("geofence_rejected",site_id,json.dumps({"distance_m":round(dist,2)}),now_utc().isoformat()))
                     c.commit()
-                    return json_response(self,403,{"error":"You are outside the allowed 2-metre attendance area"})
+                    return json_response(self,403,{"error":"You are outside the allowed 10-metre attendance area"})
                 day, ist=kolkata_parts()
                 utc=now_utc().isoformat()
                 try:
