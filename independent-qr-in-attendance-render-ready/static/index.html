@@ -6,99 +6,422 @@
   <title>IN Attendance</title>
 
   <style>
-    :root {
-      font-family: Inter, system-ui, Arial, sans-serif;
-      color: #e8edf7;
-      background: #0b1020;
-    }
+:root {
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  color: #f3f6ff;
+  background: #080d1b;
+  color-scheme: dark;
+}
 
-    * { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 18px;
-      background: radial-gradient(circle at top, #1a2850, #0b1020 60%);
-    }
+body {
+  position: relative;
+  isolation: isolate;
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 28px 16px;
+  overflow-x: hidden;
+  background:
+    radial-gradient(ellipse at 15% 20%, #344c8038, transparent 36%),
+    radial-gradient(ellipse at 85% 75%, #b44d9020, transparent 35%),
+    linear-gradient(145deg, #050a16, #111d38 50%, #080d1c);
+}
 
-    .card {
-      width: min(100%, 480px);
-      background: #111a2e;
-      border: 1px solid #293756;
-      border-radius: 22px;
-      padding: 24px;
-      box-shadow: 0 24px 70px #0005;
-    }
+/* Moonlight */
+body::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  top: 7%;
+  right: 9%;
+  width: clamp(72px, 10vw, 112px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 33% 28%,
+    #fff 0%,
+    #edf2ff 25%,
+    #c7d5f3 58%,
+    #8398c1 100%
+  );
+  box-shadow:
+    0 0 30px #bfd1ff70,
+    0 0 90px #9eb8ff30;
+  animation: moonFloat 7s ease-in-out infinite;
+  pointer-events: none;
+}
 
-    h1 { margin: 0 0 8px; font-size: 28px; }
+/* Star field */
+body::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(2px 2px at 8% 20%, #fff 55%, transparent),
+    radial-gradient(1px 1px at 23% 70%, #e6edff 55%, transparent),
+    radial-gradient(2px 2px at 44% 13%, #fff 55%, transparent),
+    radial-gradient(1px 1px at 71% 25%, #ffe0f2 55%, transparent),
+    radial-gradient(2px 2px at 89% 57%, #fff 55%, transparent),
+    radial-gradient(1px 1px at 62% 88%, #d8e5ff 55%, transparent),
+    radial-gradient(2px 2px at 14% 89%, #ffd9ed 55%, transparent);
+  animation: starsGlow 5s ease-in-out infinite alternate;
+}
 
-    .muted {
-      color: #aab7d0;
-      font-size: 14px;
-      line-height: 1.5;
-    }
+.card {
+  position: relative;
+  width: min(100%, 480px);
+  padding: clamp(22px, 5vw, 32px);
+  overflow: hidden;
+  border: 1px solid #b7cfff42;
+  border-radius: 26px;
+  background:
+    linear-gradient(140deg, #ffffff0b, transparent 40%),
+    linear-gradient(155deg, #172642ed, #0b1429f5);
+  box-shadow:
+    0 30px 90px #0008,
+    0 0 45px #9abaff12,
+    inset 0 1px 0 #ffffff24;
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  animation: cardEnter 0.8s cubic-bezier(.2, .7, .25, 1) both;
+}
 
-    .field { margin-top: 16px; }
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10%;
+  width: 80%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #c7dcff,
+    #fff,
+    #ffc8e7,
+    transparent
+  );
+  box-shadow: 0 0 20px #b8d3ff65;
+  animation: shimmer 6s ease-in-out infinite;
+}
 
-    label {
-      display: block;
-      font-size: 14px;
-      margin-bottom: 8px;
-      color: #cbd5e7;
-    }
+.card::after {
+  content: "✿";
+  position: absolute;
+  top: 19%;
+  right: 7%;
+  color: #ffc5e7;
+  font-size: 23px;
+  opacity: 0.48;
+  text-shadow: 0 0 18px #ff9cdb8c;
+  pointer-events: none;
+  animation: petalFloat 8s ease-in-out infinite;
+}
 
-    input, select, button {
-      width: 100%;
-      padding: 14px;
-      border-radius: 12px;
-      border: 1px solid #334361;
-      background: #0b1224;
-      color: #f7f9ff;
-      font: inherit;
-    }
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 27px;
+}
 
-    button {
-      border: 0;
-      background: #647cf4;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 14px;
-    }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 11px;
+  border: 1px solid #8de2ce55;
+  border-radius: 999px;
+  color: #9ff2df;
+  background: #45d6b30e;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
 
-    button:disabled { opacity: 0.5; cursor: not-allowed; }
-    .secondary { background: #24324e; }
+.pill::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #6ee7c8;
+  box-shadow: 0 0 10px #6ee7c8a0;
+}
 
-    .status {
-      padding: 12px;
-      border-radius: 12px;
-      margin-top: 16px;
-      background: #0b1224;
-      white-space: pre-wrap;
-      font-size: 14px;
-    }
+a {
+  color: #c7d8ff;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
 
-    .ok { border: 1px solid #287d65; }
-    .err { border: 1px solid #b65c67; }
+a:hover {
+  color: #ffd0eb;
+}
 
-    .top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
+h1 {
+  margin: 0 0 12px;
+  max-width: 370px;
+  color: #f4f6ff;
+  font-size: clamp(27px, 6vw, 34px);
+  line-height: 1.15;
+  letter-spacing: -1px;
+  font-weight: 850;
+  text-shadow: 0 0 28px #b6caff20;
+}
 
-    .pill {
-      font-size: 11px;
-      border: 1px solid #42547a;
-      border-radius: 99px;
-      padding: 5px 8px;
-      color: #bac8ff;
-    }
+.muted {
+  color: #b5c3df;
+  font-size: 14px;
+  line-height: 1.75;
+}
 
-    a { color: #aabaff; }
-    .hidden { display: none; }
+.field {
+  margin-top: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 9px;
+  color: #e0e9ff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.25px;
+}
+
+input,
+select,
+button {
+  width: 100%;
+  min-height: 50px;
+  padding: 14px 15px;
+  border: 1px solid #9eb9e53b;
+  border-radius: 13px;
+  background: linear-gradient(145deg, #091328, #15233f);
+  color: #f7f9ff;
+  font: inherit;
+}
+
+input,
+select {
+  outline: none;
+  box-shadow: inset 0 2px 7px #0003;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+}
+
+input::placeholder {
+  color: #8495b4;
+}
+
+input:focus,
+select:focus {
+  border-color: #c0d5ff;
+  background: #12203a;
+  box-shadow:
+    0 0 0 3px #a9c7ff20,
+    0 0 22px #a9c7ff12,
+    inset 0 1px 4px #0003;
+}
+
+button {
+  position: relative;
+  margin-top: 15px;
+  border: 1px solid #ffffff35;
+  background: linear-gradient(110deg, #789cf4, #8b85ee 55%, #c28ccf);
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  box-shadow:
+    0 8px 26px #748df52b,
+    inset 0 1px 1px #ffffff60;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.3s ease,
+    filter 0.3s ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+  box-shadow:
+    0 12px 32px #829bf54a,
+    0 0 22px #d0a8ff1c;
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0) scale(0.99);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+button.secondary {
+  border: 1px solid #9db8e650;
+  background: linear-gradient(145deg, #263956, #17243d);
+  color: #e3edff;
+  box-shadow: inset 0 1px 0 #ffffff12;
+}
+
+#mark {
+  min-height: 56px;
+  margin-top: 22px;
+  background: linear-gradient(110deg, #6fa8ff, #827df1 55%, #d28cc9);
+  box-shadow:
+    0 10px 30px #8194f638,
+    inset 0 1px 1px #ffffff70;
+}
+
+#mark:not(:disabled) {
+  animation: buttonGlow 4s ease-in-out infinite;
+}
+
+#reader {
+  padding: 12px;
+  border: 1px solid #a8c4f43d;
+  border-radius: 16px;
+  background: #071126;
+  overflow: hidden;
+}
+
+#reader video {
+  border-radius: 10px;
+}
+
+.status {
+  margin-top: 18px;
+  padding: 14px 15px;
+  border: 1px solid #9eb9e52b;
+  border-radius: 14px;
+  background: #081329e8;
+  color: #c9d7f2;
+  font-size: 13px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  box-shadow: inset 0 1px 0 #ffffff08;
+}
+
+.status.ok {
+  border-color: #53d6ad70;
+  background: #12382f65;
+  color: #aaf4d9;
+}
+
+.status.err {
+  border-color: #e78ca15e;
+  background: #421b3155;
+  color: #ffd0dc;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@keyframes moonFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(8px) scale(1.035); }
+}
+
+@keyframes starsGlow {
+  from { opacity: 0.5; }
+  to { opacity: 1; }
+}
+
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0.65; }
+  50% { opacity: 1; }
+}
+
+@keyframes petalFloat {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translate(-12px, 17px) rotate(35deg);
+    opacity: 0.8;
+  }
+}
+
+@keyframes buttonGlow {
+  0%, 100% {
+    box-shadow:
+      0 10px 28px #8194f62e,
+      inset 0 1px 1px #ffffff70;
+  }
+  50% {
+    box-shadow:
+      0 12px 34px #a18bf54d,
+      inset 0 1px 1px #ffffff80;
+  }
+}
+
+@media (max-width: 520px) {
+  body {
+    padding: 18px 12px;
+  }
+
+  body::before {
+    top: 4%;
+    right: 5%;
+    width: 70px;
+  }
+
+  .card {
+    padding: 23px 19px;
+    border-radius: 21px;
+  }
+
+  .top {
+    margin-bottom: 23px;
+  }
+
+  .muted {
+    font-size: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after,
+  .card,
+  .card::before,
+  .card::after,
+  #mark {
+    animation: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
+}
   </style>
 </head>
 
