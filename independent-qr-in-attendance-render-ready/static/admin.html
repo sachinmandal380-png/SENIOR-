@@ -1,697 +1,469 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Attendance Admin</title>
-  
-  <style>
-    /* Cricket photo background */
-body {
-  background:
-    linear-gradient(
-      rgba(5, 10, 22, 0.76),
-      rgba(5, 10, 22, 0.88)
-    ),
-    url("/static/admin-background.jpg") center 24% / cover fixed no-repeat;
-
-  color: #e8edf7;
-  min-height: 100vh;
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1220">
+<title>IN Attendance | Admin Console</title>
+<style>
+:root{font-family:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:#e8edf7;background:#0b1220;--bg:#0b1220;--panel:#111c2e;--border:#293b57;--muted:#9eacc3;--blue:#6d8cff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 15% 0%,rgba(55,91,170,.18),transparent 38%),var(--bg);color:#e8edf7}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.muted{color:var(--muted);font-size:13px;line-height:1.5}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:clamp(25px,3vw,33px);letter-spacing:-.035em;margin-bottom:8px}
+h2{font-size:18px;margin-bottom:7px}
+h3{font-size:15px;margin:18px 0 10px}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 22px;border-bottom:1px solid #263750;background:rgba(11,18,32,.92);backdrop-filter:blur(14px)}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,#7894ff,#4b63d6);font-weight:900}
+.brand-title{font-size:15px;font-weight:800;margin:0}
+.brand-sub{font-size:11px;color:var(--muted);margin:3px 0 0}
+.top-actions{display:flex;gap:8px;align-items:center}
+.layout{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 71px)}
+.sidebar{position:sticky;top:71px;align-self:start;height:calc(100vh - 71px);padding:22px 14px;border-right:1px solid #263750;background:rgba(13,23,40,.8);overflow:auto}
+.nav-label{font-size:10px;letter-spacing:.14em;color:#70819e;font-weight:800;margin:0 12px 12px;text-transform:uppercase}
+.nav{display:grid;gap:6px}
+.nav button{display:flex;align-items:center;gap:12px;width:100%;padding:12px;border:1px solid transparent;border-radius:12px;background:transparent;color:#a9b6cc;text-align:left;font-size:13px;font-weight:700}
+.nav button:hover{background:#ffffff0a;color:white}
+.nav button.active{background:linear-gradient(90deg,#6d8cff30,#6d8cff10);border-color:#6d8cff30;color:white}
+.nav-icon{width:22px;color:#9cb0ff;font-size:17px}
+.side-note{margin-top:28px;padding:14px;border:1px solid var(--border);border-radius:13px;background:#ffffff05}
+.side-note strong{font-size:12px}
+.main{min-width:0;padding:28px clamp(15px,3vw,38px) 42px}
+.page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:22px}
+.page-head p{margin-bottom:0}
+.eyebrow{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:#91a8ff;font-weight:800;margin-bottom:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:9px 13px;border:1px solid transparent;border-radius:10px;background:var(--blue);color:#fff;font-size:12px;font-weight:800}
+.btn:hover{background:#5274f3}
+.btn.secondary{background:#1b2a42;border-color:#31425e;color:#dce6fb}
+.btn.secondary:hover{background:#263954}
+.btn.small{min-height:30px;padding:6px 9px;font-size:11px}
+.status{padding:12px 14px;margin-bottom:20px;border:1px solid var(--border);border-radius:12px;background:#111c2e;color:#cbd7ec;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere}
+.view{display:none}
+.view.active{display:block}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:20px}
+.stat,.panel{border:1px solid var(--border);border-radius:16px;background:linear-gradient(145deg,#16243b,#101b2d)}
+.stat{padding:19px;min-width:0}
+.stat-label{color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:8px}
+.stat-icon{color:#9cb0ff;font-size:18px}
+.stat-value{font-size:30px;font-weight:850;letter-spacing:-.04em;margin:14px 0 4px}
+.stat-foot{color:#8495b1;font-size:11px}
+.panel{padding:20px;margin-bottom:17px;background:rgba(17,28,46,.92)}
+.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
+.panel-head p{margin-bottom:0}
+.panel-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+label{display:block;font-size:12px;font-weight:700;color:#bdc9dc;margin-bottom:7px}
+input,select,textarea{width:100%;min-width:0;padding:11px 12px;border:1px solid #334560;border-radius:10px;outline:none;background:#0b1424;color:#edf3ff;font-size:13px}
+input:focus,select:focus,textarea:focus{border-color:#718cff;box-shadow:0 0 0 3px #6d8cff20}
+input::placeholder,textarea::placeholder{color:#6f809c}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field{min-width:0;margin:12px 0}
+.form-row{display:flex;align-items:flex-end;gap:10px}
+.form-row .field{flex:1}
+.form-actions{margin-top:14px}
+.tablewrap{width:100%;overflow:auto;border:1px solid #8fa4c920;border-radius:12px}
+table{width:100%;border-collapse:collapse;min-width:610px}
+th,td{padding:12px 14px;border-bottom:1px solid #8fa4c91f;text-align:left;font-size:12px;vertical-align:middle}
+th{background:#152238;color:#9eacc3;font-size:10px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#ffffff05}
+.empty{padding:22px;color:var(--muted);text-align:center;font-size:13px}
+.pill{display:inline-block;padding:5px 8px;border-radius:99px;background:#94a3b81f;color:#c6d1e4;font-size:10px;font-weight:800}
+.pill.good{background:#34d39920;color:#6ee7b7}
+.pill.bad{background:#fb718520;color:#fda4af}
+.pill.pending{background:#fbbf2420;color:#fcd34d}
+.site-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:13px}
+.site-card{min-width:0;padding:17px;border:1px solid #2b3d59;border-radius:14px;background:linear-gradient(145deg,#15243b,#101b2d)}
+.site-head{display:flex;justify-content:space-between;gap:10px}
+.site-head h3{margin:0 0 6px;overflow-wrap:anywhere}
+.site-meta{margin:13px 0;color:var(--muted);font-size:12px;line-height:1.8;overflow-wrap:anywhere}
+.site-actions{display:flex;flex-wrap:wrap;gap:7px}
+.qr-area{margin-top:13px;padding:12px;border-radius:10px;background:#fff;color:#111827;overflow:auto}
+.qr-area p{color:#4b5563}
+.auth-wrap{display:grid;place-items:center;min-height:calc(100vh - 71px);padding:24px}
+.auth-card{width:min(100%,440px);padding:28px;border:1px solid var(--border);border-radius:20px;background:#111c2ef5;box-shadow:0 25px 70px #0004}
+.auth-card .mark{margin-bottom:18px}
+.auth-card h1{font-size:25px}
+.auth-card .btn{width:100%;margin-top:6px}
+.foot{margin-top:18px;color:#71819b;font-size:11px;line-height:1.6}
+.mobile-menu{display:none}
+@media(max-width:950px){.layout{grid-template-columns:205px minmax(0,1fr)}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){
+.topbar{padding:11px 13px}.brand-sub{display:none}.mark{width:37px;height:37px}
+.layout{display:block}
+.sidebar{position:fixed;z-index:30;top:62px;bottom:0;left:0;width:265px;height:auto;transform:translateX(-105%);transition:transform .2s;box-shadow:18px 0 45px #0005}
+.menu-open .sidebar{transform:translateX(0)}
+.mobile-menu{display:inline-flex}.top-actions .desktop{display:none}
+.main{padding:21px 13px 34px}.page-head{display:block}
+.page-head .btn{margin-top:12px}.stats{grid-template-columns:1fr;gap:10px}
+.stat{padding:16px}.panel{padding:15px}.panel-head{display:block}
+.panel-head .btn,.panel-tools{margin-top:12px}
+.fields{grid-template-columns:1fr}.form-row{display:grid;grid-template-columns:1fr}
+.site-grid{grid-template-columns:1fr}
 }
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <button class="btn secondary mobile-menu" type="button" onclick="toggleMenu()" aria-label="Open menu">☰</button>
+    <div class="mark">IN</div>
+    <div><p class="brand-title">IN Attendance</p><p class="brand-sub">Independent QR Attendance System</p></div>
+  </div>
+  <div class="top-actions">
+    <a class="btn secondary desktop" href="/">↗ Public page</a>
+    <button id="topRefresh" class="btn secondary desktop hidden" onclick="refresh()">↻ Refresh</button>
+    <button id="topLogout" class="btn hidden" onclick="logout()">Sign out</button>
+  </div>
+</header>
 
-/* Transparent admin panels */
-.card {
-  background: rgba(13, 22, 39, 0.86);
-  border: 1px solid rgba(130, 157, 208, 0.28);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+<section id="authArea" class="auth-wrap">
+  <div id="setup" class="auth-card hidden">
+    <div class="mark">IN</div><p class="eyebrow">Secure first-time setup</p><h1>Create administrator</h1>
+    <p class="muted">Create a unique admin account. Use a password of at least 12 characters.</p>
+    <div class="field"><label for="su">Username</label><input id="su" minlength="3" autocomplete="username" placeholder="Choose a username"></div>
+    <div class="field"><label for="sp">Password</label><input id="sp" type="password" minlength="12" autocomplete="new-password" placeholder="At least 12 characters"></div>
+    <div id="setupKeyWrap" class="field hidden"><label for="suk">Hosting setup key</label><input id="suk" type="password" autocomplete="off" placeholder="ADMIN_SETUP_KEY from hosting settings"></div>
+    <button class="btn" onclick="setupAdmin()">Create admin account</button>
+    <p class="foot">Keep your administrator credentials private.</p>
+  </div>
+  <div id="login" class="auth-card hidden">
+    <div class="mark">IN</div><p class="eyebrow">Administrator access</p><h1>Welcome back</h1>
+    <p class="muted">Sign in to manage approved people, locations and attendance records.</p>
+    <div class="field"><label for="lu">Username</label><input id="lu" autocomplete="username" placeholder="Enter username"></div>
+    <div class="field"><label for="lp">Password</label><input id="lp" type="password" autocomplete="current-password" placeholder="Enter password"></div>
+    <button class="btn" onclick="login()">Sign in securely</button>
+    <p class="foot">Attendance marking remains IN-only. Site activation requires physical verification.</p>
+  </div>
+</section>
+
+<div id="adminApp" class="layout hidden">
+  <aside class="sidebar">
+    <p class="nav-label">Workspace</p>
+    <nav class="nav">
+      <button class="active" data-view="dashboard" onclick="navigate('dashboard')"><span class="nav-icon">▦</span>Dashboard</button>
+      <button data-view="people" onclick="navigate('people')"><span class="nav-icon">♙</span>People Management</button>
+      <button data-view="locations" onclick="navigate('locations')"><span class="nav-icon">⌖</span>Locations & QR</button>
+      <button data-view="attendance" onclick="navigate('attendance')"><span class="nav-icon">☷</span>Attendance Records</button>
+      <button data-view="reports" onclick="navigate('reports')"><span class="nav-icon">⇩</span>Reports & Export</button>
+      <button data-view="audit" onclick="navigate('audit')"><span class="nav-icon">◷</span>Audit History</button>
+    </nav>
+    <div class="side-note"><strong>System security</strong><p class="muted">Fixed QR · IN only · Site verification</p></div>
+  </aside>
+
+  <main class="main">
+    <div class="page-head">
+      <div><p class="eyebrow">ADMIN CONSOLE</p><h1 id="viewTitle">Dashboard</h1><p class="muted">Manage approved people, attendance sites and records.</p></div>
+      <button class="btn secondary" onclick="refresh()">↻ Refresh data</button>
+    </div>
+    <div id="status" class="status">Checking system…</div>
+
+    <section id="view-dashboard" class="view active">
+      <div id="overview" class="stats"></div>
+      <div class="panel">
+        <div class="panel-head"><div><h2>Recent attendance</h2><p class="muted">Latest IN entries recorded by the system.</p></div><button class="btn secondary small" onclick="navigate('attendance')">View all</button></div>
+        <div id="dashboardRecords"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div><h2>Attendance sites</h2><p class="muted">Site activation and QR access.</p></div><button class="btn secondary small" onclick="navigate('locations')">Manage sites</button></div>
+        <div id="dashboardSites" class="site-grid"></div>
+      </div>
+    </section>
+
+    <section id="view-people" class="view">
+      <div class="panel">
+        <div class="panel-head"><div><h2>Approved people</h2><p class="muted">Only approved names should appear in attendance.</p></div></div>
+        <div class="form-row">
+          <div class="field"><label for="personName">Full name</label><input id="personName" placeholder="Enter approved person's name"></div>
+          <button class="btn" onclick="addPerson()">+ Add person</button>
+        </div>
+        <div id="people"></div>
+      </div>
+    </section>
+
+    <section id="view-locations" class="view">
+      <div class="panel">
+        <div class="panel-head"><div><h2>Attendance sites</h2><p class="muted">Verify the physical location before activating a site.</p></div></div>
+        <div id="sites" class="site-grid"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div><h2>Add attendance site</h2><p class="muted">A newly added site remains pending until verified.</p></div></div>
+        <div class="fields">
+          <div class="field"><label for="siteId">Site ID</label><input id="siteId" placeholder="Example: SITE-002"></div>
+          <div class="field"><label for="siteName">Site name</label><input id="siteName" placeholder="Attendance site name"></div>
+          <div class="field"><label for="siteLat">Latitude</label><input id="siteLat" type="number" step="any" placeholder="Latitude"></div>
+          <div class="field"><label for="siteLon">Longitude</label><input id="siteLon" type="number" step="any" placeholder="Longitude"></div>
+          <div class="field"><label for="siteRadius">Radius (metres)</label><input id="siteRadius" type="number" min="1" value="2"></div>
+        </div>
+        <div class="form-actions"><button class="btn" onclick="addSite()">Add site</button></div>
+      </div>
+    </section>
+
+    <section id="view-attendance" class="view">
+      <div class="panel">
+        <div class="panel-head"><div><h2>Attendance records</h2><p class="muted">Records returned by the attendance API.</p></div></div>
+        <div class="form-row">
+          <div class="field"><label for="start">From date</label><input id="start" type="date"></div>
+          <div class="field"><label for="end">To date</label><input id="end" type="date"></div>
+          <button class="btn" onclick="exportCsv()">Export filtered CSV</button>
+          <button class="btn secondary" onclick="clearDates()">Clear dates</button>
+        </div>
+        <div id="records"></div>
+      </div>
+    </section>
+
+    <section id="view-reports" class="view">
+      <div class="panel">
+        <div class="panel-head"><div><h2>Reports & Export</h2><p class="muted">Download attendance records as CSV.</p></div></div>
+        <div class="form-row">
+          <div class="field"><label for="reportStart">From date</label><input id="reportStart" type="date"></div>
+          <div class="field"><label for="reportEnd">To date</label><input id="reportEnd" type="date"></div>
+          <button class="btn" onclick="exportReportCsv()">Download CSV</button>
+          <button class="btn secondary" onclick="clearReportDates()">Clear</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-audit" class="view">
+      <div class="panel">
+        <div class="panel-head"><div><h2>Audit history</h2><p class="muted">Administrative actions and correction reasons.</p></div></div>
+        <div id="audit"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+function show(id, visible=true){$(id).classList.toggle('hidden',!visible)}
+function msg(text){$('status').textContent=text}
+async function api(path, options={}) {
+  const r=await fetch(path,{credentials:'same-origin',headers:{'Content-Type':'application/json',...(options.headers||{})},...options});
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(d.error||d.message||`Request failed (${r.status})`);
+  return d;
 }
+function navigate(view) {
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  $('view-'+view).classList.add('active');
+  document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
+  const titles={dashboard:'Dashboard',people:'People Management',locations:'Locations & QR',attendance:'Attendance Records',reports:'Reports & Export',audit:'Audit History'};
+  $('viewTitle').textContent=titles[view]||'Dashboard';
+  document.body.classList.remove('menu-open');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function toggleMenu(){document.body.classList.toggle('menu-open')}
 
-/* Mobile background adjustment */
-@media (max-width: 680px) {
-  body {
-    background-attachment: scroll;
-    background-position: center top;
+async function boot() {
+  try {
+    const s=await api('/api/setup-status');
+    if(s.setup_required) {
+      show('authArea');show('setup');show('login',false);show('adminApp',false);
+      show('setupKeyWrap',!!s.setup_key_required);
+      msg('First-run setup required. Create the administrator account.');
+      return;
+    }
+    try {
+      await api('/api/admin/me');
+      show('authArea',false);show('adminApp');show('topRefresh');show('topLogout');
+      msg('Signed in. Loading admin data…');
+      await refresh();
+    } catch {
+      show('authArea');show('login');show('setup',false);show('adminApp',false);
+    }
+  } catch(e) {
+    show('authArea');show('login');msg(e.message);
   }
 }
-    :root {
-      font-family: Inter, system-ui, Arial;
-      color: #e8edf7;
-      background: #0b1020;
-    }
 
-    * {
-      box-sizing: border-box;
-    }
+async function setupAdmin() {
+  try {
+    await api('/api/setup',{method:'POST',body:JSON.stringify({
+      username:$('su').value.trim(),password:$('sp').value,setup_key:$('suk').value
+    })});
+    msg('Admin created. Sign in with the new account.');
+    show('setup',false);show('login');
+    $('lu').value=$('su').value;$('lp').value='';
+  } catch(e){msg(e.message)}
+}
 
-    body {
-      margin: 0;
-      padding: 20px;
-    }
+async function login() {
+  try {
+    await api('/api/login',{method:'POST',body:JSON.stringify({
+      username:$('lu').value.trim(),password:$('lp').value
+    })});
+    show('authArea',false);show('adminApp');show('topRefresh');show('topLogout');
+    navigate('dashboard');msg('Signed in successfully.');
+    await refresh();
+  } catch(e){msg(e.message)}
+}
 
-    .wrap {
-      max-width: 1100px;
-      margin: auto;
-    }
+async function logout() {
+  try {await api('/api/logout',{method:'POST',body:'{}'})}
+  finally {location.reload()}
+}
 
-    .card {
-      background: #111a2e;
-      border: 1px solid #293756;
-      border-radius: 18px;
-      padding: 20px;
-      margin: 14px 0;
-    }
-
-    h1, h2 {
-      margin-top: 0;
-    }
-
-    input, button {
-      padding: 11px;
-      border-radius: 10px;
-      border: 1px solid #334361;
-      background: #0b1224;
-      color: #f7f9ff;
-      font: inherit;
-    }
-
-    input {
-      width: 100%;
-      margin: 5px 0 12px;
-    }
-
-    button {
-      cursor: pointer;
-      background: #647cf4;
-      border: 0;
-      font-weight: 700;
-    }
-
-    button.secondary {
-      background: #24324e;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 12px;
-    }
-
-    .muted {
-      color: #aab7d0;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .row input {
-      flex: 1;
-    }
-
-    .tablewrap {
-      overflow: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 600px;
-    }
-
-    td, th {
-      text-align: left;
-      padding: 10px;
-      border-bottom: 1px solid #293756;
-      font-size: 13px;
-    }
-
-    .status {
-      padding: 10px;
-      background: #0b1224;
-      border-radius: 10px;
-      white-space: pre-wrap;
-    }
-
-    a {
-      color: #aabaff;
-    }
-  </style>
-</head>
-
-<body>
-  <main class="wrap">
-    <p><a href="/">← Public attendance</a></p>
-
-    <h1>Admin Console</h1>
-
-    <p class="muted">
-      Independent QR IN Attendance System · Configure carefully.
-      Site activation requires physical verification.
-    </p>
-
-    <div id="status" class="status">Checking setup…</div>
-
-    <!-- First-run administrator setup -->
-    <section id="setup" class="card hidden">
-      <h2>First-run admin setup</h2>
-
-      <p class="muted">
-        Create a unique admin account. Use a password of at least 12 characters.
-      </p>
-
-      <label>Username</label>
-      <input id="su" minlength="3">
-
-      <label>Password</label>
-      <input
-        id="sp"
-        type="password"
-        minlength="12"
-        autocomplete="new-password"
-      >
-
-      <label id="setupKeyLabel" class="hidden">
-        Hosting setup key
-      </label>
-
-      <input
-        id="suk"
-        class="hidden"
-        type="password"
-        autocomplete="off"
-        placeholder="ADMIN_SETUP_KEY from hosting settings"
-      >
-
-      <button onclick="setupAdmin()">Create admin</button>
-    </section>
-
-    <!-- Administrator login -->
-    <section id="login" class="card hidden">
-      <h2>Admin login</h2>
-
-      <label>Username</label>
-      <input id="lu">
-
-      <label>Password</label>
-      <input id="lp" type="password">
-
-      <button onclick="login()">Sign in</button>
-    </section>
-
-    <!-- Main admin panel -->
-    <div id="panel" class="hidden">
-
-      <div class="row">
-        <button class="secondary" onclick="refresh()">Refresh data</button>
-        <button class="secondary" onclick="logout()">Sign out</button>
-      </div>
-
-      <!-- Overview -->
-      <section class="card">
-        <h2>Overview</h2>
-        <div id="overview" class="grid"></div>
-      </section>
-
-      <!-- Approved people -->
-      <section class="card">
-        <h2>Add approved person</h2>
-
-        <div class="row">
-          <input id="personName" placeholder="Full name">
-          <button onclick="addPerson()">Add</button>
-        </div>
-
-        <div id="people"></div>
-      </section>
-
-      <!-- Locations -->
-      <section class="card">
-        <h2>Locations</h2>
-
-        <p class="muted">
-          SITE-001 starts inactive pending verification. Activate only after
-          physically confirming the coordinate. Second location is not preconfigured.
-        </p>
-
-        <div id="sites"></div>
-
-        <h3>Add another site</h3>
-
-        <div class="grid">
-          <div>
-            <label>Site ID</label>
-            <input id="siteId" placeholder="SITE-002">
-          </div>
-
-          <div>
-            <label>Site name</label>
-            <input id="siteName" placeholder="Second site">
-          </div>
-
-          <div>
-            <label>Latitude</label>
-            <input id="siteLat" type="number" step="any">
-          </div>
-
-          <div>
-            <label>Longitude</label>
-            <input id="siteLon" type="number" step="any">
-          </div>
-
-          <div>
-            <label>Radius (0.1–100 m)</label>
-            <input
-              id="siteRadius"
-              type="number"
-              value="2"
-              min="0.1"
-              max="100"
-              step="0.1"
-            >
-          </div>
-        </div>
-
-        <button onclick="addSite()">Create inactive site</button>
-      </section>
-
-      <!-- Attendance records -->
-      <section class="card">
-        <h2>Attendance records</h2>
-
-        <div class="row">
-          <input id="start" type="date">
-          <input id="end" type="date">
-          <button onclick="exportCsv()">Export CSV</button>
-        </div>
-
-        <div id="records" class="tablewrap"></div>
-      </section>
-
-      <!-- Audit history -->
-      <section class="card">
-        <h2>Audit history</h2>
-        <div id="audit" class="tablewrap"></div>
-      </section>
-
+function esc(v) {
+  return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function table(headers,rows) {
+  if(!rows||!rows.length)return '<div class="empty">No records to display.</div>';
+  return '<div class="tablewrap"><table><thead><tr>'+headers.map(h=>'<th>'+esc(h)+'</th>').join('')+
+    '</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(v=>'<td>'+esc(v)+'</td>').join('')+'</tr>').join('')+
+    '</tbody></table></div>';
+}
+function pill(active,yes='Active',no='Inactive') {
+  return `<span class="pill ${active?'good':'bad'}">${active?yes:no}</span>`;
+}
+function siteCard(s,prefix='site') {
+  const rawId=String(s.id??'');
+  const id=esc(rawId),name=esc(s.name);
+  const target=prefix+'-qr-'+rawId.replace(/[^a-zA-Z0-9_-]/g,'');
+  const verification=String(s.verification_status||'Pending verification');
+  const verifyClass=verification.toLowerCase().includes('verif')?'good':'pending';
+  return `<article class="site-card">
+    <div class="site-head"><div><h3>${id} — ${name}</h3><div class="muted">Attendance site</div></div>${pill(!!s.active,'Active','Inactive')}</div>
+    <div class="site-meta">
+      <div>Latitude: ${esc(s.latitude)}</div><div>Longitude: ${esc(s.longitude)}</div>
+      <div>Radius: ${esc(s.radius_m)} m</div><div>Verification: <span class="pill ${verifyClass}">${esc(verification)}</span></div>
     </div>
-  </main>
+    <div class="site-actions">
+      <a class="btn secondary small" href="/?site=${encodeURIComponent(rawId)}">Open site ↗</a>
+      <button class="btn secondary small" onclick="activateSite('${esc(rawId)}')">Verify & activate</button>
+      <button class="btn secondary small" onclick="showQr('${esc(rawId)}','${target}')">Show QR</button>
+    </div><div id="${target}"></div>
+  </article>`;
+}
 
-  <script>
-    const $ = id => document.getElementById(id);
+async function refresh() {
+  try {
+    const d=await api('/api/admin/overview');
+    $('overview').innerHTML=`
+      <article class="stat"><div class="stat-label">Approved people <span class="stat-icon">♙</span></div><div class="stat-value">${esc(d.people)}</div><div class="stat-foot">Active approved list</div></article>
+      <article class="stat"><div class="stat-label">Today's IN <span class="stat-icon">✓</span></div><div class="stat-value">${esc(d.today)}</div><div class="stat-foot">Current business date</div></article>
+      <article class="stat"><div class="stat-label">Configured sites <span class="stat-icon">⌖</span></div><div class="stat-value">${esc((d.sites||[]).length)}</div><div class="stat-foot">Location configuration</div></article>`;
 
-    async function api(url, opts = {}) {
-      const r = await fetch(url, {
-        ...opts,
-        headers: {
-          'Content-Type': 'application/json',
-          ...(opts.headers || {})
-        }
-      });
+    const people=d.people_list||[];
+    $('people').innerHTML=people.length
+      ? '<div class="tablewrap"><table><thead><tr><th>Name</th><th>Status</th><th>Action</th></tr></thead><tbody>'+
+        people.map(p=>`<tr><td>${esc(p.name)}</td><td>${pill(!!p.active,'Active','Deactivated')}</td><td><button class="btn secondary small" onclick="togglePerson(${Number(p.id)})">${p.active?'Deactivate':'Reactivate'}</button></td></tr>`).join('')+
+        '</tbody></table></div>'
+      : '<div class="empty">No approved people found.</div>';
 
-      let j = {};
+    const sites=(d.sites||[]);
+    $('sites').innerHTML=sites.map(s=>siteCard(s,'locations')).join('')||'<div class="empty">No sites configured.</div>';
+    $('dashboardSites').innerHTML=sites.slice(0,3).map(s=>siteCard(s,'dashboard')).join('')||'<div class="empty">No sites configured.</div>';
 
-      try {
-        j = await r.json();
-      } catch {}
+    const records=d.attendance||[];
+    $('records').innerHTML=records.length
+      ? '<div class="tablewrap"><table><thead><tr><th>Name</th><th>Site</th><th>Date</th><th>Time (IST)</th><th>Status</th><th>Correction</th></tr></thead><tbody>'+
+        records.map(a=>`<tr><td>${esc(a.name)}</td><td>${esc(a.site_id)}</td><td>${esc(a.business_date)}</td><td>${esc(a.marked_at_ist)}</td><td>${esc(a.status)}</td><td><button class="btn secondary small" onclick="correct(${Number(a.id)})">Correct with reason</button></td></tr>`).join('')+
+        '</tbody></table></div>'
+      : '<div class="empty">No attendance records found.</div>';
 
-      if (!r.ok) {
-        throw Error(j.error || 'Request failed');
-      }
-
-      return j;
+    $('dashboardRecords').innerHTML=table(
+      ['Name','Site','Date','Time (IST)','Status'],
+      records.slice(0,6).map(a=>[a.name,a.site_id,a.business_date,a.marked_at_ist,a.status])
+    );
+    $('audit').innerHTML=table(
+      ['Action','Entity','ID','Reason','Created'],
+      (d.audit||[]).map(a=>[a.action,a.entity_type,a.entity_id,a.reason,a.created_at])
+    );
+    msg('Data refreshed successfully.');
+  } catch(e) {
+    msg(e.message);
+    if(/unauthorized|sign in/i.test(e.message)) {
+      show('authArea');show('login');show('adminApp',false);
     }
+  }
+}
 
-    function msg(t) {
-      $('status').textContent = t;
-    }
+async function addPerson() {
+  try {
+    const name=$('personName').value.trim();
+    if(!name){msg('Enter a person’s full name first.');$('personName').focus();return}
+    await api('/api/admin/people',{method:'POST',body:JSON.stringify({name})});
+    $('personName').value='';msg('Person added successfully.');await refresh();
+  } catch(e){msg(e.message)}
+}
 
-    function show(id, on = true) {
-      $(id).classList.toggle('hidden', !on);
-    }
+async function togglePerson(id) {
+  try {
+    await api(`/api/admin/people/${encodeURIComponent(id)}/toggle`,{method:'POST',body:'{}'});
+    msg('Person status updated.');await refresh();
+  } catch(e){msg(e.message)}
+}
 
-    async function boot() {
-      try {
-        const s = await api('/api/setup-status');
+async function activateSite(id) {
+  if(!confirm('Confirm you have physically verified this exact site coordinate?'))return;
+  try {
+    await api('/api/admin/site/activate',{method:'POST',body:JSON.stringify({site_id:id,confirm:true})});
+    msg('Site activation request submitted.');await refresh();
+  } catch(e){msg(e.message)}
+}
 
-        if (s.setup_required) {
-          show('setup');
-          show('login', false);
-          show('panel', false);
-          show('setupKeyLabel', !!s.setup_key_required);
-          show('suk', !!s.setup_key_required);
-          msg('First-run setup required');
-          return;
-        }
+async function addSite() {
+  try {
+    const id=$('siteId').value.trim(),name=$('siteName').value.trim();
+    const latitude=$('siteLat').value,longitude=$('siteLon').value,radius_m=$('siteRadius').value;
+    if(!id||!name||latitude===''||longitude===''||radius_m===''){msg('Fill in every site field.');return}
+    await api('/api/admin/site/add',{method:'POST',body:JSON.stringify({id,name,latitude,longitude,radius_m})});
+    $('siteId').value='';$('siteName').value='';$('siteLat').value='';$('siteLon').value='';$('siteRadius').value='2';
+    msg('Site added pending verification.');await refresh();
+  } catch(e){msg(e.message)}
+}
 
-        try {
-          await api('/api/admin/me');
+async function correct(id) {
+  const reason=prompt('Enter the reason for this attendance correction (minimum 5 characters):');
+  if(!reason)return;
+  if(reason.trim().length<5){msg('Please enter a reason of at least 5 characters.');return}
+  try {
+    await api('/api/admin/attendance/correct',{method:'POST',body:JSON.stringify({attendance_id:id,reason:reason.trim()})});
+    msg('Correction submitted and audit logged.');await refresh();
+  } catch(e){msg(e.message)}
+}
 
-          show('panel');
-          show('login', false);
-          show('setup', false);
+function exportCsv(startId,endId) {
+  const q=new URLSearchParams();
+  if($(startId).value)q.set('start',$(startId).value);
+  if($(endId).value)q.set('end',$(endId).value);
+  location.href='/api/admin/export'+(q.toString()?'?'+q.toString():'');
+}
+function exportReportCsv(){exportCsv('reportStart','reportEnd')}
+function clearDates(){$('start').value='';$('end').value='';refresh()}
+function clearReportDates(){$('reportStart').value='';$('reportEnd').value=''}
 
-          msg('Signed in');
-          await refresh();
-        } catch {
-          show('login');
-          show('panel', false);
-          show('setup', false);
+function showQr(id,targetId) {
+  const el=$(targetId);
+  if(!el)return;
+  if(el.innerHTML){el.innerHTML='';return}
+  const url=location.origin+'/?site='+encodeURIComponent(id);
+  el.className='qr-area';
+  el.innerHTML=`<p><strong>Fixed site QR</strong></p><p>${esc(url)}</p><div id="qr-canvas-${targetId}"></div><button class="btn secondary small" onclick="printQr('${esc(id)}')">Print QR</button>`;
+  if(window.QRCode) {
+    new QRCode($('qr-canvas-'+targetId),{text:url,width:220,height:220});
+  } else {
+    el.insertAdjacentHTML('beforeend','<p>QR library unavailable. The existing fixed QR should remain unchanged.</p>');
+  }
+}
+function printQr(id) {
+  const url=location.origin+'/?site='+encodeURIComponent(id);
+  const w=window.open('','_blank');
+  if(!w){msg('Allow pop-ups to print the QR.');return}
+  w.document.write(`<!doctype html><html><head><title>${esc(id)} QR</title></head><body style="font-family:Arial,sans-serif;text-align:center;padding:24px"><h2>${esc(id)}</h2><p>${esc(url)}</p><div id="qr" style="display:inline-block"></div><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script><script>new QRCode(document.getElementById('qr'),{text:${JSON.stringify(url)},width:300,height:300});window.onload=()=>window.print();<\/script></body></html>`);
+  w.document.close();
+}
 
-          msg('Sign in required');
-        }
-      } catch (e) {
-        msg(e.message);
-      }
-    }
-
-    async function setupAdmin() {
-      try {
-        await api('/api/setup', {
-          method: 'POST',
-          body: JSON.stringify({
-            username: $('su').value,
-            password: $('sp').value,
-            setup_key: $('suk').value
-          })
-        });
-
-        msg('Admin created. Sign in.');
-        show('setup', false);
-        show('login');
-      } catch (e) {
-        msg(e.message);
-      }
-    }
-
-    async function login() {
-      try {
-        await api('/api/login', {
-          method: 'POST',
-          body: JSON.stringify({
-            username: $('lu').value,
-            password: $('lp').value
-          })
-        });
-
-        show('login', false);
-        show('panel');
-        msg('Signed in');
-
-        await refresh();
-      } catch (e) {
-        msg(e.message);
-      }
-    }
-
-    async function logout() {
-      await api('/api/logout', {
-        method: 'POST',
-        body: '{}'
-      });
-
-      location.reload();
-    }
-
-    function table(headers, rows) {
-      return '<table><thead><tr>' +
-        headers.map(h => '<th>' + h + '</th>').join('') +
-        '</tr></thead><tbody>' +
-        rows.map(r =>
-          '<tr>' +
-          r.map(v =>
-            '<td>' +
-            String(v ?? '').replace(/[&<>"]/g, c => ({
-              '&': '&amp;',
-              '<': '&lt;',
-              '>': '&gt;',
-              '"': '&quot;'
-            }[c])) +
-            '</td>'
-          ).join('') +
-          '</tr>'
-        ).join('') +
-        '</tbody></table>';
-    }
-
-    async function refresh() {
-      try {
-        const d = await api('/api/admin/overview');
-
-        $('overview').innerHTML =
-          `<div class="card">Active approved people<br><strong>${d.people}</strong></div>` +
-          `<div class="card">Today's IN attendance<br><strong>${d.today}</strong></div>` +
-          `<div class="card">Configured sites<br><strong>${d.sites.length}</strong></div>`;
-
-        $('people').innerHTML = table(
-          ['Name', 'Status', 'Action'],
-          d.people_list.map(p => [
-            p.name,
-            p.active ? 'Active' : 'Deactivated',
-            `<button class="secondary" onclick="togglePerson(${p.id})">${p.active ? 'Deactivate' : 'Reactivate'}</button>`
-          ])
-        );
-
-        $('sites').innerHTML = d.sites.map(s =>
-          `<div class="card">
-            <strong>${s.id} — ${s.name}</strong>
-
-            <p class="muted">
-              Lat ${s.latitude}, Lon ${s.longitude} · Radius ${s.radius_m} m ·
-              ${s.verification_status} · ${s.active ? 'Active' : 'Inactive'}
-            </p>
-
-            <a href="/?site=${encodeURIComponent(s.id)}">
-              Open attendance page
-            </a> ·
-
-            <button
-              class="secondary"
-              onclick="activateSite('${s.id}')"
-            >
-              Confirm on-site verification & activate
-            </button>
-
-            <button
-              class="secondary"
-              onclick="showQr('${s.id}')"
-            >
-              Show QR
-            </button>
-
-            <div id="qr-${s.id}"></div>
-          </div>`
-        ).join('');
-
-        $('records').innerHTML = table(
-          ['Name', 'Site', 'Date', 'Time (IST)', 'Status', 'Correction'],
-          d.attendance.map(a => [
-            a.name,
-            a.site_id,
-            a.business_date,
-            a.marked_at_ist,
-            a.status,
-            `<button class="secondary" onclick="correct(${a.id})">Remove with reason</button>`
-          ])
-        );
-
-        $('audit').innerHTML = table(
-          ['Action', 'Entity', 'ID', 'Reason', 'Created'],
-          d.audit.map(a => [
-            a.action,
-            a.entity_type,
-            a.entity_id,
-            a.reason,
-            a.created_at
-          ])
-        );
-      } catch (e) {
-        msg(e.message);
-        show('login');
-      }
-    }
-
-    async function addPerson() {
-      try {
-        await api('/api/admin/people', {
-          method: 'POST',
-          body: JSON.stringify({
-            name: $('personName').value
-          })
-        });
-
-        $('personName').value = '';
-        msg('Person added');
-
-        await refresh();
-      } catch (e) {
-        msg(e.message);
-      }
-    }
-
-    async function togglePerson(id) {
-      try {
-        await api(`/api/admin/people/${id}/toggle`, {
-          method: 'POST',
-          body: '{}'
-        });
-
-        await refresh();
-      } catch (e) {
-        msg(e.message);
-      }
-    }
-
-    async function activateSite(id) {
-      if (!confirm(
-        'Confirm you have physically verified this exact site coordinate?'
-      )) {
-        return;
-      }
-
-      try {
-        await api('/api/admin/site/activate', {
-          method: 'POST',
-          body: JSON.stringify({
-            site_id: id,
-            confirm: true
-          })
-        });
-
-        msg('Site activated');
-        await refresh();
-      } catch (e) {
-        msg(e.message);
-      }
-    }
-
-    async function addSite() {
-      try {
-        await api('/api/admin/site/add', {
-          method: 'POST',
-          body: JSON.stringify({
-            id: $('siteId').value,
-            name: $('siteName').value,
-            latitude: $('siteLat').value,
-            longitude: $('siteLon').value,
-            radius_m: $('siteRadius').value
-          })
-        });
-
-        msg('Site added pending verification');
-        await refresh();
-      } catch (e) {
-        msg(e.message);
-      }
-    }
-
-    async function correct(id) {
-      const reason = prompt(
-        'Required reason (minimum 5 characters):'
-      );
-
-      if (!reason) {
-        return;
-      }
-
-      try {
-        await api('/api/admin/attendance/correct', {
-          method: 'POST',
-          body: JSON.stringify({
-            attendance_id: id,
-            reason
-          })
-        });
-
-        msg('Record removed and audit logged');
-        await refresh();
-      } catch (e) {
-        msg(e.message);
-      }
-    }
-
-    function exportCsv() {
-      const q = new URLSearchParams({
-        start: $('start').value,
-        end: $('end').value
-      });
-
-      location.href = '/api/admin/export?' + q.toString();
-    }
-
-    function showQr(id) {
-      const el = $('qr-' + id);
-
-      el.innerHTML = `
-        <p class="muted">
-          Fixed site QR. Internet is required for the QR library.
-        </p>
-
-        <div id="qrcanvas-${id}"></div>
-
-        <button
-          class="secondary"
-          onclick="printQr('${id}')"
-        >
-          Print site QR
-        </button>
-      `;
-
-      if (window.QRCode) {
-        new QRCode(
-          document.getElementById('qrcanvas-' + id),
-          {
-            text: location.origin + '/?site=' + encodeURIComponent(id),
-            width: 220,
-            height: 220
-          }
-        );
-      } else {
-        el.insertAdjacentHTML(
-          'beforeend',
-          '<p>QR library unavailable. Use the site URL link above.</p>'
-        );
-      }
-    }
-
-    function printQr(id) {
-      const url = location.origin + '/?site=' + encodeURIComponent(id);
-      const w = window.open('', '_blank');
-
-      w.document.write(`
-        <h2>${id}</h2>
-        <p>${url}</p>
-        <div id="qr"></div>
-
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
-
-        <script>
-          new QRCode(document.getElementById('qr'), {
-            text: ${JSON.stringify(url)},
-            width: 300,
-            height: 300
-          });
-
-          window.print();
-        <\/script>
-      `);
-
-      w.document.close();
-    }
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-  <script>
-    boot();
-  </script>
+$('lp').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
+$('sp').addEventListener('keydown',e=>{if(e.key==='Enter')setupAdmin()});
+$('personName').addEventListener('keydown',e=>{if(e.key==='Enter')addPerson()});
+boot();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </body>
 </html>
