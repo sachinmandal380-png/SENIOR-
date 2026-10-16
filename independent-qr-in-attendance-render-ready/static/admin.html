@@ -5,6 +5,125 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0b1220">
 <title>IN Attendance | Admin Console</title>
+  
+/* METALLIC ICE BLUE THEME */
+:root {
+  --bg: #111923;
+  --panel: #202d3a;
+  --border: #526779;
+  --muted: #b0c0ce;
+  --blue: #8fbbd8;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 15% 0%, #42617b55, transparent 40%),
+    linear-gradient(135deg, #111923, #1b2936 55%, #101821);
+  color: #f1f6fa;
+}
+
+.topbar,
+.sidebar {
+  background: linear-gradient(145deg, #253746, #131e29);
+  border-color: #50687a;
+}
+
+.topbar {
+  box-shadow: 0 4px 22px #0004;
+}
+
+.mark,
+.btn:not(.secondary) {
+  background: linear-gradient(135deg, #d6e5ef, #769bb6 48%, #4b6c84);
+  color: #101923;
+  border: 1px solid #e0edf5;
+  box-shadow: inset 0 1px 1px #ffffff75,
+              0 3px 10px #0003;
+}
+
+.btn:not(.secondary):hover {
+  background: linear-gradient(135deg, #edf7ff, #8fb8d5);
+}
+
+.btn.secondary {
+  background: linear-gradient(145deg, #34495b, #202e3b);
+  color: #e8f2f9;
+  border-color: #71899b;
+  box-shadow: inset 0 1px 0 #ffffff15;
+}
+
+.panel,
+.stat,
+.site-card,
+.auth-card {
+  background: linear-gradient(145deg, #293a49, #1a2733 65%, #17222d);
+  border: 1px solid #526b7e;
+  box-shadow: inset 0 1px 0 #ffffff12,
+              0 8px 22px #0002;
+}
+
+.nav button.active {
+  background: linear-gradient(100deg, #8fbbd833, #8fbbd80b);
+  border-color: #8fbbd877;
+  color: #ffffff;
+}
+
+.nav-icon,
+.stat-icon,
+.eyebrow {
+  color: #a8d8f5;
+}
+
+input,
+select,
+textarea {
+  background: linear-gradient(145deg, #131e29, #1c2a37);
+  border-color: #536b7e;
+  color: #f1f7fb;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #a8d8f5;
+  box-shadow: 0 0 0 3px #8fbbd822;
+}
+
+th {
+  background: linear-gradient(90deg, #33495b, #263847);
+  color: #d2e4f1;
+}
+
+.site-card {
+  background: linear-gradient(145deg, #31495b, #1a2936);
+}
+
+.pill.good {
+  background: #2c947b35;
+  color: #8af0d2;
+}
+
+.pill.bad {
+  background: #c75b6b35;
+  color: #ffc0c8;
+}
+
+.pill.pending {
+  background: #b9954430;
+  color: #f6d995;
+}
+
+.status {
+  background: linear-gradient(120deg, #263b4c, #192733);
+  border-color: #526c80;
+}
+
+@media (max-width: 700px) {
+  .sidebar {
+    background: linear-gradient(145deg, #253746, #111b25);
+  }
+}
+
 <style>
 :root{font-family:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:#e8edf7;background:#0b1220;--bg:#0b1220;--panel:#111c2e;--border:#293b57;--muted:#9eacc3;--blue:#6d8cff}
 *{box-sizing:border-box}
