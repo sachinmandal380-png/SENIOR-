@@ -5,6 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Attendance Admin</title>
 
+  /* Cricket photo background */
+body {
+  background:
+    linear-gradient(
+      rgba(5, 10, 22, 0.76),
+      rgba(5, 10, 22, 0.88)
+    ),
+    url("/static/admin-background.jpg") center 24% / cover fixed no-repeat;
+
+  color: #e8edf7;
+  min-height: 100vh;
+}
+
+/* Transparent admin panels */
+.card {
+  background: rgba(13, 22, 39, 0.86);
+  border: 1px solid rgba(130, 157, 208, 0.28);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Mobile background adjustment */
+@media (max-width: 680px) {
+  body {
+    background-attachment: scroll;
+    background-position: center top;
+  }
+}
   <style>
     :root {
       font-family: Inter, system-ui, Arial;
